@@ -1,0 +1,313 @@
+---
+title: "Introdução a Web Scraping com R"
+author: "Jodavid Ferreira"
+#institute: "UFPE"
+date: "`r format(Sys.Date(),'%d.%b.%Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["css/jodavid.css", "css/mmp.css","css/mmp-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+layout: true
+
+<div class="my-footer"><span>
+
+<a href="http://jodavid.github.io">Jodavid Ferreira</a> - email: <a href="mailto:jdaf1@de.ufpe.br">jdaf1@de.ufpe.br</a>
+</span></div>
+
+
+---
+
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE,width = 5000)
+
+knitr::opts_chunk$set(fig.align = "center", message=FALSE, warning=FALSE, cache = TRUE)
+```
+
+<br/>
+# O que é Web Scrapping?
+
+<br/>
+* O **Web Scraping** é uma área da **Text Mining**;
+
+
+<br/><br/>
+### O que é Text Mining?
+
+<br/>
+*  Text Mining ou Mineração de texto é o processo de **destilar**<sup>1</sup> **insights** do texto.
+
+
+.footnote[
+[1] A destilação é uma técnica de separação.
+]
+
+---
+
+### Onde a mineração de texto se encaixa?
+
+<br/>
+* Para acadêmicos, pode auxiliar na compreensão de transcrições qualitativas ou num estudo da linguagem;
+
+<br/>
+* Para empresas, pode render informações interessantes que auxiliarão na modelagem preditiva por exemplo;
+
+<br/>
+* Aos profissionais de marketing, podem auxiliar na criação de textos, fornecendo recomendações precisas para sua organização.
+<!--isso porque através de análises de textos externos, eles podem criar os seus fornecendo recomendações precisas para sua organização.-->
+
+<br/>
+* Então, a mineração de texto pode ser usada em qualquer decisão baseada em dados, onde o texto se encaixa naturalmente como uma entrada.
+
+
+---
+
+# Pacote `rvest`
+
+<br/>
+<br/>
+
+```{r, echo = FALSE, out.width="20%", fig.cap="<center><b>Logo - rvest </center></b>"}
+knitr::include_graphics("https://raw.githubusercontent.com/tidyverse/rvest/master/man/figures/logo.png")
+```
+
+<br/>
+
+
+`rvest` ajuda você a extrair (ou colher) dados de páginas da web.
+
+Ele foi projetado para funcionar com *magrittr* (pacote responsável pelo operador pipe *%>%*) para facilitar a expressão de tarefas comuns de web scraping, inspiradas em bibliotecas como a `beautiful soup` e `RoboBrowser`.
+
+<!--
+Se você estiver copiando várias páginas, recomendo fortemente o uso de rvest em conjunto com educado. O pacote educado garante que você respeite o robots.txt e não martele o site com muitas solicitações.
+-->
+
+---
+
+# O que é HTML e CSS ?
+
+* **HTML** (HyperText Markup Language - Linguagem de Marcação de Hipertexto) - é uma linguagem de marcação usada para estruturar uma página web.
+
+* **CSS** (Cascading Style Sheets - Folha de Estilo em Cascata) - é usado para estilizar os elementos escritos no *HTML*.
+
+
+
+### O que precisa saber ?
+
+Em **HTML** e **CSS**, existe a possibilidade de aplicar estilos através de 'class' e 'id';
+
+
+
+* **HTML** : 
+ * *class* : é o atributo global formado por uma lista das classes de um elemento, separada por espaços.
+<!-- Classes permitem a CSS e Javascript selecionar e acessar elementos específicos através dos seletores de classe ou funções como o método DOM. -->
+  * *id* : define um identificador exclusivo (ID) que deve ser único por todo o documento.
+<!--Seu objetivo é identificar o elemento ao navegar por âncoras (usando um identificador de fragmento), quando utilizar scripts ou estilizando (com CSS).-->
+
+* **CSS**: usado para personalizar a parte visual dos sites.
+
+---
+
+# Instalando o `rvest`
+
+<br/>
+Instalando o `rvest` através do `devtools`
+
+<br/>
+```{r eval=FALSE}
+install.packages("devtools")
+library(devtools)
+devtools::install_github("tidyverse/rvest")
+```
+
+<br/>
+<br/>
+Lendo o pacote:
+
+<br/>
+```{r}
+library(rvest)
+```
+
+---
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Projeto Serenata de Amor
+
+O estudo será realizado sobre o projeto “SERENATA DE AMOR” [https://serenata.ai/](https://serenata.ai/), que é um projeto aberto no qual usa data science (ciência de dados) - a mesma tecnolgia usada por gigantes como Google, Facebook e Netflix - com o objetivo de monitorar os gastos públicos e compartilhar informações de forma acessível a todos.
+
+
+* Jarbas - [https://jarbas.serenata.ai/dashboard/chamber_of_deputies/reimbursement/](https://jarbas.serenata.ai/dashboard/chamber_of_deputies/reimbursement/)
+
+
+```{r, echo = FALSE, out.width="100%", fig.cap="<center><b>site Jarbas </center></b>"}
+knitr::include_graphics("imagens/jarbas.png")
+```
+
+
+
+---
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 1: Lendo a URL
+
+Usando a função `read_html` do pacote `xml2` (este pacote é uma dependência do `rvest`) para ler a url.
+
+```{r}
+library(rvest)
+
+url <- "https://jarbas.serenata.ai/dashboard/chamber_of_deputies/reimbursement/"
+jarbas_webpage <- read_html(url)
+```
+
+---
+
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 2: Extrair dados de classes do CSS
+
+Class: *.field-congressperson_name*
+
+```{r, echo = FALSE, out.width="100%", fig.cap="<center><b>class:  .field-congressperson_name </center></b>"}
+knitr::include_graphics("imagens/field-congresso-name.png")
+```
+
+---
+
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 2:
+
+
+Duas funções serão utilizadas aqui:
+
+1. *html_nodes*: Use esta função para extrair os nós que desejamos (neste caso nós com ".field-congressperson_name" como classe css)
+2. *html_text*: Use esta função para extrair o texto entre dos nós html (neste caso, os nomes de nossos representantes)
+
+```{r, size="huge"}
+#Scraping  usando classe css ‘field-congressperson_name’
+jarbas_names_html <-html_nodes(jarbas_webpage, '.field-congressperson_name')
+jarbas_names <- html_text(jarbas_names_html)
+head(jarbas_names,3)
+```
+
+---
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 2:
+
+
+```{r}
+#SUBQUOTA TRANSLATED
+jarbas_subquota_html <-html_nodes(jarbas_webpage, '.field-subquota_translated')
+jarbas_subquota <- html_text(jarbas_subquota_html)
+head(jarbas_subquota,3)
+
+#Fornecedor
+jarbas_provider_html <-html_nodes(jarbas_webpage, '.field-supplier_info')
+jarbas_provider <- html_text(jarbas_provider_html)
+head(jarbas_provider,3)
+
+#Valores em Real
+jarbas_value_html <-html_nodes(jarbas_webpage, '.field-value')
+jarbas_value <- html_text(jarbas_value_html)
+head(jarbas_value,3)
+
+```
+
+---
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 2:
+
+A seguir serão mostrados o valor do reembolso, eles são extraídos
+em tipo de variável caracter: Ex: R\$ 139,76, R\$ 40,23.
+Entretanto, como desejamos manipular esses números, precisamos convertê-los para tipo de variável numérica, dessa forma será utilizado a biblioteca: "*stringr*" mais especificamente a função: `str_extract`. Segue o script para conversão da variável.
+
+```{r}
+library(stringr)
+#Conversão para tipo numérico
+jarbas_value <- as.numeric(sub(",",".",
+                str_extract(jarbas_value,pattern = "\\-*\\d+,\\s{0,}\\d+")))
+head(jarbas_value,3)
+```
+
+---
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 3: Geração de data.frame
+
+```{r}
+#Combinando todas as características obtidas
+jarbas_names <- str_extract(jarbas_names,pattern = boundary("word"))
+jarbas_df <- data.frame(
+  Name = jarbas_names,
+  Subquota = jarbas_subquota,
+  Provider = jarbas_provider,
+  Value = jarbas_value
+  )
+
+#Mostrando tipo das variáveis
+str(jarbas_df)
+```
+
+---
+
+## Exemplo 1: Extraindo informações site Jarbas
+
+### Passo 4: Geração de um gráfico
+
+Foram utilizados as 50 primeiras linhas do data.frame e uma biblioteca *ggplot2* para geração do gráfico.
+
+```{r, eval = F}
+library(ggplot2)
+
+jarbas_df <- jarbas_df[1:50,]
+
+ggplot(
+  jarbas_df, aes(Value,Name,colour=Subquota)) +
+  geom_point() +
+  labs(title="", x ="pedidos de reembolso (R$)",
+       y = "deputados",colour="SUBQUOTA TRANSLATED")
+```
+
+
+---
+
+```{r, fig.width=15,echo=F}
+library(ggplot2)
+
+jarbas_df <- jarbas_df[1:50,]
+
+ggplot(
+  jarbas_df, aes(Value,Name,colour=Subquota)) +
+  geom_point() +
+  labs(title="", x ="pedidos de reembolso (R$)",
+       y = "deputados",colour="SUBQUOTA TRANSLATED")
+```
+
+---
+
+## Exemplo 2: ???
+
+
+# Fontes
+
+* Slide produzido com Rmarkdown, com template
+`Xaringan`: [https://github.com/yihui/xaringan](https://github.com/yihui/xaringan).
+* Livro: `Text Mining in Practice with R`;
+
+* [https://github.com/tidyverse/rvest](https://github.com/tidyverse/rvest)

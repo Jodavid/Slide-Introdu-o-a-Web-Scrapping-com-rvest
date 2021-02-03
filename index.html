@@ -506,6 +506,21 @@ head(dataframe_palavras,18)
 
 ## Extra: Análise de Sentimentos
 
+**Análise de sentimentos** é a tarefa de identificar se a opinião que foi expressada em um determinado texto, é positiva ou negativa. 
+
+Na **análise de sentimento** o grande problema a ser resolvido, é a classificação do texto que está sendo analisado. A classificação consiste no processo de encontrar, através de *Machine Learning*, um modelo ou função que descreva diferentes classes de dados.
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://binds.co/img/section/faces-sentiment.png" alt="&amp;lt;center&amp;gt;&amp;lt;b&amp;gt;Análise de Sentimento&amp;lt;/center&amp;gt;&amp;lt;/b&amp;gt;" width="55%" /&gt;
+&lt;p class="caption"&gt;&lt;center&gt;&lt;b&gt;Análise de Sentimento&lt;/center&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+Fonte: [https://binds.co/img/section/faces-sentiment.png](https://binds.co/img/section/faces-sentiment.png)
+
+---
+
+## Extra: Análise de Sentimentos
+
 Essa parte foi baseada no no vídeo [https://youtu.be/YRUfYxoRssY](https://youtu.be/YRUfYxoRssY) do
 canal **EstaTiDados**.
 
@@ -577,7 +592,7 @@ ggplot(df, aes(polaridades,fill=polaridades)) +
   theme_minimal()
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 
 ```r
 # &lt;&gt;----------------------------
@@ -599,7 +614,7 @@ ggplot(emotions, aes(x=factor(1), fill=factor(BEST_FIT))) +
        y = "y")
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
 
 ```r
 # &lt;&gt;----------------------------
@@ -650,7 +665,7 @@ comparison.cloud(tdm,
                  scale = c(3,.5),random.order = F)
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -664,7 +679,8 @@ comparison.cloud(tdm,
 * [https://github.com/tidyverse/rvest](https://github.com/tidyverse/rvest)
 
 * [https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html](https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html)
-webpage &lt;- read_html(url)
+
+* [http://www.cienciaedados.com/analise-de-sentimentos-e-machine-learning/#:~:text=An%C3%A1lise%20de%20sentimentos%20%C3%A9%20a,texto%2C%20%C3%A9%20positiva%20ou%20negativa.](http://www.cienciaedados.com/analise-de-sentimentos-e-machine-learning/#:~:text=An%C3%A1lise%20de%20sentimentos%20%C3%A9%20a,texto%2C%20%C3%A9%20positiva%20ou%20negativa.)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

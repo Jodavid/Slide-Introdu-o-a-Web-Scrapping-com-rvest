@@ -15,7 +15,7 @@ class: center, middle, inverse, title-slide
 
 # Introdução a Web Scraping com R
 ### Jodavid Ferreira
-### 03.fev.2021
+### 03.02.2021
 
 ---
 
@@ -34,17 +34,19 @@ layout: true
 
 
 &lt;br/&gt;
-# O que é Web Scrapping?
+# O que é Web Scraping?
 
 &lt;br/&gt;
-* O **Web Scraping** é uma área da **Text Mining**;
+* O **Web Scraping** é uma área da **Text Mining (Mineração de Texto)** ;
 
 
 &lt;br/&gt;&lt;br/&gt;
-### O que é Text Mining?
+### O que é Mineração de Texto?
+
+Segundo o Livro '`Text Mining in Practice with R`':
 
 &lt;br/&gt;
-*  Text Mining ou Mineração de texto é o processo de **destilar**&lt;sup&gt;1&lt;/sup&gt; **insights** do texto.
+*  "Mineração de texto é o processo de **destilar**&lt;sup&gt;1&lt;/sup&gt; **insights** de texto".
 
 
 .footnote[
@@ -56,17 +58,17 @@ layout: true
 ### Onde a mineração de texto se encaixa?
 
 &lt;br/&gt;
-* Para acadêmicos, pode auxiliar na compreensão de transcrições qualitativas ou num estudo da linguagem;
+* Para **acadêmicos**, pode auxiliar na compreensão de transcrições qualitativas ou num estudo da linguagem;
 
 &lt;br/&gt;
-* Para empresas, pode render informações interessantes que auxiliarão na modelagem preditiva por exemplo;
+* Para **empresas**, pode render informações interessantes que auxiliarão na modelagem preditiva por exemplo;
 
 &lt;br/&gt;
-* Aos profissionais de marketing, podem auxiliar na criação de textos, fornecendo recomendações precisas para sua organização.
+* Aos **profissionais de marketing**, podem auxiliar na criação de textos, fornecendo recomendações precisas para sua organização.
 &lt;!--isso porque através de análises de textos externos, eles podem criar os seus fornecendo recomendações precisas para sua organização.--&gt;
 
 &lt;br/&gt;
-* Então, a mineração de texto pode ser usada em qualquer decisão baseada em dados, onde o texto se encaixa naturalmente como uma entrada.
+* Então, a **mineração de texto** pode ser usada em qualquer decisão baseada em dados, onde o texto se encaixa naturalmente como uma entrada.
 
 
 ---
@@ -362,10 +364,7 @@ library(rvest)
 url &lt;- "https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html"
 webpage &lt;- read_html(url)
 ```
----
 
-
-## Exemplo 2: Texto de Site
 
 ### Passo 2: Extraindo texto de Site
   
@@ -417,7 +416,8 @@ Foram utilizados o data.frame e uma biblioteca *ggplot2* para geração do gráf
 library(wordcloud)
 library(yarrr)
 
-wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
+wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE,
+          colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
@@ -473,7 +473,8 @@ matriz_palavras[1:5,]
 ```r
 # Ordenando por frequência
 matriz_palavras &lt;- sort(rowSums(matriz_palavras), decreasing = TRUE)
-dataframe_palavras &lt;- data.frame(palavras = names(matriz_palavras), frequencia = matriz_palavras, row.names = NULL)
+dataframe_palavras &lt;- data.frame(palavras = names(matriz_palavras),
+                                 frequencia = matriz_palavras, row.names = NULL)
 
 head(dataframe_palavras,18)
 ```

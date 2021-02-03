@@ -2,7 +2,7 @@
 title: "Introdução a Web Scraping com R"
 author: "Jodavid Ferreira"
 #institute: "UFPE"
-date: "`r format(Sys.Date(),'%d.%b.%Y')`"
+date: "`r format(Sys.Date(),'%d.%m.%Y')`"
 output:
   xaringan::moon_reader:
     css: ["css/jodavid.css", "css/mmp.css","css/mmp-fonts.css"]
@@ -25,23 +25,25 @@ layout: true
 
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE,width = 5000)
+options(htmltools.dir.version = FALSE,width = 500)
 
 knitr::opts_chunk$set(fig.align = "center", message=FALSE, warning=FALSE, cache = TRUE)
 ```
 
 <br/>
-# O que é Web Scrapping?
+# O que é Web Scraping?
 
 <br/>
-* O **Web Scraping** é uma área da **Text Mining**;
+* O **Web Scraping** é uma área da **Text Mining (Mineração de Texto)** ;
 
 
 <br/><br/>
-### O que é Text Mining?
+### O que é Mineração de Texto?
+
+Segundo o Livro '`Text Mining in Practice with R`':
 
 <br/>
-*  Text Mining ou Mineração de texto é o processo de **destilar**<sup>1</sup> **insights** do texto.
+*  "Mineração de texto é o processo de **destilar**<sup>1</sup> **insights** de texto".
 
 
 .footnote[
@@ -53,17 +55,17 @@ knitr::opts_chunk$set(fig.align = "center", message=FALSE, warning=FALSE, cache 
 ### Onde a mineração de texto se encaixa?
 
 <br/>
-* Para acadêmicos, pode auxiliar na compreensão de transcrições qualitativas ou num estudo da linguagem;
+* Para **acadêmicos**, pode auxiliar na compreensão de transcrições qualitativas ou num estudo da linguagem;
 
 <br/>
-* Para empresas, pode render informações interessantes que auxiliarão na modelagem preditiva por exemplo;
+* Para **empresas**, pode render informações interessantes que auxiliarão na modelagem preditiva por exemplo;
 
 <br/>
-* Aos profissionais de marketing, podem auxiliar na criação de textos, fornecendo recomendações precisas para sua organização.
+* Aos **profissionais de marketing**, podem auxiliar na criação de textos, fornecendo recomendações precisas para sua organização.
 <!--isso porque através de análises de textos externos, eles podem criar os seus fornecendo recomendações precisas para sua organização.-->
 
 <br/>
-* Então, a mineração de texto pode ser usada em qualquer decisão baseada em dados, onde o texto se encaixa naturalmente como uma entrada.
+* Então, a **mineração de texto** pode ser usada em qualquer decisão baseada em dados, onde o texto se encaixa naturalmente como uma entrada.
 
 
 ---
@@ -325,10 +327,7 @@ library(rvest)
 url <- "https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html"
 webpage <- read_html(url)
 ```
----
 
-
-## Exemplo 2: Texto de Site
 
 ### Passo 2: Extraindo texto de Site
   
@@ -368,11 +367,12 @@ vetor_palavras <- Corpus(VectorSource(unlist(lista_palavras))) #Convertendo em f
   
 Foram utilizados o data.frame e uma biblioteca *ggplot2* para geração do gráfico.
 
-```{r, eval = F}
+```{r, eval=FALSE}
 library(wordcloud)
 library(yarrr)
 
-wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
+wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE,
+          colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
@@ -383,7 +383,8 @@ wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE, colors = ya
 library(wordcloud)
 library(yarrr)
 
-wordcloud(words = vetor_palavras, min.freq = 2, random.order = TRUE, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
+wordcloud(words = vetor_palavras, min.freq = 2, random.order = TRUE,
+          colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
@@ -412,7 +413,8 @@ matriz_palavras[1:5,]
 ```{r}
 # Ordenando por frequência
 matriz_palavras <- sort(rowSums(matriz_palavras), decreasing = TRUE)
-dataframe_palavras <- data.frame(palavras = names(matriz_palavras), frequencia = matriz_palavras, row.names = NULL)
+dataframe_palavras <- data.frame(palavras = names(matriz_palavras),
+                                 frequencia = matriz_palavras, row.names = NULL)
 
 head(dataframe_palavras,18)
 ```

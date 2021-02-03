@@ -58,7 +58,7 @@ Segundo o Livro '`Text Mining in Practice with R`':
 ### Onde a mineração de texto se encaixa?
 
 &lt;br/&gt;
-* Para **acadêmicos**, pode auxiliar na compreensão de transcrições qualitativas ou num estudo da linguagem;
+* Para **acadêmicos**, pode auxiliar na compreensão de transcrições qualitativas ou em um estudo da linguagem;
 
 &lt;br/&gt;
 * Para **empresas**, pode render informações interessantes que auxiliarão na modelagem preditiva por exemplo;
@@ -104,7 +104,7 @@ Se você estiver copiando várias páginas, recomendo fortemente o uso de rvest 
 
 
 
-### O que precisa saber ?
+### O que precisamos saber ?
 
 Em **HTML** e **CSS**, existe a possibilidade de aplicar estilos através de 'class' e 'id';
 
@@ -145,7 +145,7 @@ library(rvest)
 
 ---
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Projeto Serenata de Amor
 
@@ -164,7 +164,7 @@ O estudo será realizado sobre o projeto “SERENATA DE AMOR” [https://serenat
 
 ---
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 1: Lendo a URL
 
@@ -181,7 +181,7 @@ jarbas_webpage &lt;- read_html(url)
 ---
 
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 2: Extrair dados de classes do CSS
 
@@ -195,7 +195,7 @@ Class: *.field-congressperson_name*
 ---
 
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 2:
 
@@ -203,7 +203,7 @@ Class: *.field-congressperson_name*
 Duas funções serão utilizadas aqui:
 
 1. *html_nodes*: Use esta função para extrair os nós que desejamos (neste caso nós com ".field-congressperson_name" como classe css)
-2. *html_text*: Use esta função para extrair o texto entre dos nós html (neste caso, os nomes de nossos representantes)
+2. *html_text*: Use esta função para extrair o texto dos nós html (neste caso, os nomes de nossos representantes)
 
 
 ```r
@@ -219,7 +219,7 @@ head(jarbas_names,3)
 
 ---
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 2:
 
@@ -260,12 +260,12 @@ head(jarbas_value,3)
 
 ---
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 2:
 
 A seguir serão mostrados o valor do reembolso, eles são extraídos
-em tipo de variável caracter: Ex: R\$ 139,76, R\$ 40,23.
+em tipo de variável caracter: Ex: R$ 139,76, R$ 40,23.
 Entretanto, como desejamos manipular esses números, precisamos convertê-los para tipo de variável numérica, dessa forma será utilizado a biblioteca: "*stringr*" mais especificamente a função: `str_extract`. Segue o script para conversão da variável.
 
 
@@ -283,7 +283,7 @@ head(jarbas_value,3)
 
 ---
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 3: Geração de data.frame
 
@@ -312,7 +312,7 @@ str(jarbas_df)
 
 ---
 
-## Exemplo 1: Extraindo informações site Jarbas
+## Exemplo 1: Extraindo informações do site Jarbas
 
 ### Passo 4: Geração de um gráfico
 
@@ -504,6 +504,156 @@ head(dataframe_palavras,18)
 
 ---
 
+## Extra: Análise de Sentimentos
+
+Essa parte foi baseada no no vídeo [https://youtu.be/YRUfYxoRssY](https://youtu.be/YRUfYxoRssY) do
+canal **EstaTiDados**.
+
+
+```r
+# library(devtools)
+# install_github("abhy/Rstem")
+# install_github("abhy/sentiment")
+# install.packages("lexiconPT")
+library(sentiment)
+library(lexiconPT)
+
+# Utilizando o pacote "sentiment" para classificar as emocoes
+emotions &lt;- classify_emotion(texto, algorithm = 'bayes', prior = 1.0)
+head(emotions)
+```
+
+```
+##      ANGER              DISGUST            FEAR               JOY                SADNESS           SURPRISE           BEST_FIT
+## [1,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "7.34083555412328" "1.7277074477352" "2.78695866252273" "joy"   
+## [2,] "13.2129533435987" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" "anger" 
+## [3,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" NA      
+## [4,] "7.34083555412328" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" "anger" 
+## [5,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" NA      
+## [6,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "7.34083555412328" "1.7277074477352" "2.78695866252273" "joy"
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+
+```r
+# Utilizando o pacote "sentiment" para classificar as polaridades
+polarities &lt;- classify_polarity(texto, algorithm = "bayes")
+head(polarities)
+```
+
+```
+##      POS                NEG                 POS/NEG             BEST_FIT  
+## [1,] "9.47547003995745" "0.445453222112551" "21.2715265477714"  "positive"
+## [2,] "16.5333679773693" "17.8123396772424"  "0.928197433742679" "negative"
+## [3,] "1.03127774142571" "0.445453222112551" "2.31512017476245"  "positive"
+## [4,] "16.5333679773693" "26.8423564950873"  "0.61594323808326"  "negative"
+## [5,] "16.5333679773693" "0.445453222112551" "37.1158342933523"  "positive"
+## [6,] "17.9196623384892" "9.47547003995745"  "1.89116342122587"  "neutral"
+```
+
+```r
+# Transformando os resultados em data.frame
+df &lt;- data.frame(paragrafos = texto, emocoes = emotions[,'BEST_FIT'],
+                 polaridades = polarities[,'BEST_FIT'])
+# Transformando os NA em N.A.
+df[is.na(df)] &lt;- "N.A"
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+
+```r
+# &lt;&gt;----------------------------
+# Gráfico de Barras com polaridades
+ggplot(df, aes(polaridades,fill=polaridades)) +
+  geom_bar() +
+  labs(title="", x ="Polaridades",
+       y = "Quantidades") + 
+  theme_minimal()
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+
+```r
+# &lt;&gt;----------------------------
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+
+```r
+# &lt;&gt;----------------------------
+# Gráfico de Setores com emocoes
+emotions &lt;- data.frame(emotions)
+ggplot(emotions, aes(x=factor(1), fill=factor(BEST_FIT))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(title="", x ="x",
+       y = "y")
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+
+```r
+# &lt;&gt;----------------------------
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+
+```r
+library(dplyr)
+# Gráfico de Nuvem de tags com polaridades
+#
+# Dividindo o texto nas polaridades
+polaridades_cat &lt;- unique(df$polaridades)
+# Separando os textos de postivo
+positivo &lt;- summarise(df,
+                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[1])],
+                                     collapse = " "))
+# Separando os textos de Negativo
+negativo &lt;- summarise(df,
+                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[2])],
+                                     collapse = " "))
+# Separando os textos de Neutro
+neutro &lt;- summarise(df,
+                    texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[3])],
+                                   collapse = " "))
+# Juntando em um data.frame
+df2 &lt;- data.frame(polaridades = polaridades_cat,
+                  pasted = c(positivo$texto2,negativo$texto2,neutro$texto2))
+df2$pasted &lt;- removeWords(df2$pasted, stopwords(kind = "pt"))
+corpus = Corpus(VectorSource(df2$pasted))
+tdm &lt;- TermDocumentMatrix(corpus)
+tdm &lt;- as.matrix(tdm)
+colnames(tdm) &lt;- unique(df2$polaridades)
+# &lt;&gt;----------------------------
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+
+```r
+comparison.cloud(tdm,
+                 colors = yarrr::piratepal("basel"),
+                 scale = c(3,.5),random.order = F)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
 
 # Fontes
 

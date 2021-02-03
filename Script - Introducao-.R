@@ -122,6 +122,7 @@ dados_str <- unlist(names)
 library(tm)
 library(wordcloud)
 texto <- tolower(dados_str) # Colocando as palavras em minusculos
+texto <- removeWords(texto, stopwords(kind = "pt"))
 lista_palavras <- strsplit(texto, "\\W+")
 vetor_palavras <- Corpus(VectorSource(unlist(lista_palavras)))
 # <>----------------------------
@@ -129,7 +130,7 @@ vetor_palavras <- Corpus(VectorSource(unlist(lista_palavras)))
 # Passo 4: Geração de um gráfico de Nuvem de Tags
 # Abrindo Janela para Gráfico
 X11()
-wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
+wordcloud(words = vetor_palavras, min.freq = 2, random.order = F, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 # <>----------------------------
 # <>----------------------------
 # Extra:
@@ -143,3 +144,80 @@ matriz_palavras
 matriz_palavras <- sort(rowSums(matriz_palavras), decreasing = TRUE)
 dataframe_palavras <- data.frame(palavras = names(matriz_palavras), frequencia = matriz_palavras, row.names = NULL)
 head(dataframe_palavras)
+# <>----------------------------
+# <>----------------------------
+# Análise de Sentimentos
+#
+# <>----------------------------
+# Pacotes Necessários
+# 
+# library(devtools)
+# install_github("abhy/Rstem")
+# install_github("abhy/sentiment")
+# install.packages("lexiconPT")
+library(sentiment)
+library(lexiconPT)
+# <>----------------------------
+# <>----------------------------
+# Utilizando o pacote "sentiment" para classificar as emocoes
+emotions <- classify_emotion(texto, algorithm = 'bayes', prior = 1.0)
+head(emotions)
+# Utilizando o pacote "sentiment" para classificar as polaridades
+polarities <- classify_polarity(texto, algorithm = "bayes")
+head(polarities)
+# Transformando os resultados em data.frame
+df <- data.frame(paragrafos = texto, emocoes = emotions[,'BEST_FIT'],
+                 polaridades = polarities[,'BEST_FIT'])
+# Transformando os NA em N.A.
+df[is.na(df)] <- "N.A"
+# <>----------------------------
+# <>----------------------------
+# Gráfico de Barras com polaridades
+ggplot(df, aes(polaridades,fill=polaridades)) +
+  geom_bar() +
+  labs(title="", x ="Polaridades",
+       y = "Quantidades") + 
+  theme_minimal()
+# <>----------------------------
+# <>----------------------------
+# Gráfico de Setores com emocoes
+emotions <- data.frame(emotions)
+ggplot(emotions, aes(x=factor(1), fill=factor(BEST_FIT))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(title="", x ="x",
+       y = "y")
+# <>----------------------------
+# <>----------------------------
+library(dplyr)
+# Gráfico de Nuvem de tags com polaridades
+#
+# Dividindo o texto nas polaridades
+polaridades_cat <- unique(df$polaridades)
+# Separando os textos de postivo
+positivo <- summarise(df,
+                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[1])],
+                                     collapse = " "))
+# Separando os textos de Negativo
+negativo <- summarise(df,
+                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[2])],
+                                     collapse = " "))
+# Separando os textos de Neutro
+neutro <- summarise(df,
+                    texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[3])],
+                                   collapse = " "))
+# Juntando em um data.frame
+df2 <- data.frame(polaridades = polaridades_cat,
+                  pasted = c(positivo$texto2,negativo$texto2,neutro$texto2))
+df2$pasted <- removeWords(df2$pasted, stopwords(kind = "pt"))
+corpus = Corpus(VectorSource(df2$pasted))
+tdm <- TermDocumentMatrix(corpus)
+tdm <- as.matrix(tdm)
+colnames(tdm) <- unique(df2$polaridades)
+# <>----------------------------
+# <>----------------------------
+X11()
+comparison.cloud(tdm,
+                 colors = yarrr::piratepal("basel"),
+                 scale = c(3,.5),random.order = F)
+# <>----------------------------

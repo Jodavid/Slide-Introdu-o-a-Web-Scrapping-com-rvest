@@ -301,115 +301,124 @@ ggplot(
 
 ---
 
-## Exemplo 2: Dados do COVID-19 da PB
+## Exemplo 2: Texto de um WebSite
 
-Obter dados da COVID-19 do projeto [https://brasil.io/home/](https://brasil.io/home/).
-O projeto Brasil em dados libertos, 
-conta com 40 voluntários que, diariamente, compilam boletins epidemiológicos das 27 Secretarias Estaduais de Saúde, disponibilizamos uma base de dados com a série histórica de casos e óbitos confirmados por município. 
+Neste segundo exemplo vamos obter o texto de um site e analisá-lo.
 
 
-* Brasil.io (dados COVID19-PB) - [https://brasil.io/covid19/PB/](https://brasil.io/covid19/PB/)
+* Site El País (categoria de Tecnologia) - [https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html](https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html)
 
 
-```{r, echo = FALSE, out.width="100%", fig.cap="<center><b>site Brasil.io </center></b>"}
-knitr::include_graphics("imagens/covid19.png")
+```{r, echo = FALSE, out.width="100%", fig.cap="<center><b>site ElPaís </center></b>"}
+knitr::include_graphics("imagens/elpais.png")
 ```
 
 ---
 
-## Exemplo 2: Dados do COVID-19 da PB
+## Exemplo 2: Texto de Site
 
 ### Passo 1: Lendo a URL
 
 ```{r}
 library(rvest)
 
-url <- "https://brasil.io/covid19/PB/"
-covidpb_webpage <- read_html(url)
+url <- "https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html"
+webpage <- read_html(url)
 ```
-
 ---
 
 
-## Exemplo 2: Dados do COVID-19 da PB
+## Exemplo 2: Texto de Site
 
-### Passo 2:
+### Passo 2: Extraindo texto de Site
   
 ```{r, size="huge"}
-#Scraping  usando classe css ‘dataTables_scrollBody’
-covidpb_names_html <-html_nodes(covidpb_webpage, '.table')
-covidpb_names <- html_text(covidpb_names_html)
-head(covidpb_names,3)
-
-#Separando por "\n"
-vetortotal <- strsplit(covidpb_names,"\n ")
-
-#Transformando em uma matriz
-matrizcovid <- matrix(vetortotal[[1]],byrow = T,ncol = 7) #Número de colunas observados no site
-
-#Transformando em um data.frame
-covid19pb <- data.frame(matrizcovid)
-
-#Transformando primeira linha nos nomes das colunas
-names(covid19pb) <- covid19pb[1,]
-covid19pb <- covid19pb[-1,]
-
-head(covid19pb,3)
-
+# Passo 2:
+#Scraping  usando ‘p’
+names_html <-html_nodes(webpage, 'p')
+names <- html_text(names_html)
+head(names)
 ```
 
 ---
 
-## Exemplo 2: Dados do COVID-19 da PB
+## Exemplo 2: Texto de Site
   
-### Passo 2:
-  
-Convertendo a variável data em formato `date` e os casos confirmados em `numericos`.
+### Passo 3: Preparação dos dados
+
+Organizando os dados para geração do gráfico da Nuvem de Tags
+
+* `Corpus`: função que transforma vetores/listas em coleções de documentos que contêm texto.
 
 ```{r}
+# Convertendo a lista em vetor
+dados_str <- unlist(names)
 
-covid19pb$` Data ` <- as.Date(covid19pb$` Data `, "%d/%m/%Y")
+# Início do código para Nuvem de palavras
+library(tm)
 
-covid19pb$`Confirmados ` <- as.numeric(gsub('\\.', '', covid19pb$`Confirmados `))
-
-
-str(covid19pb)
+texto <- tolower(dados_str) # Colocando as palavras em minusculos
+lista_palavras <- strsplit(texto, "\\W+") # dividindo o texto nas palavras
+vetor_palavras <- Corpus(VectorSource(unlist(lista_palavras))) #Convertendo em formato Corpus
 ```
 
 ---
     
-### Passo 4: Geração de um gráfico
+### Passo 4: Geração de um gráfico de Nuvem de Tags
   
 Foram utilizados o data.frame e uma biblioteca *ggplot2* para geração do gráfico.
 
 ```{r, eval = F}
-library(ggplot2)
+library(wordcloud)
+library(yarrr)
 
-ggplot(
-  covid19pb, aes(`Confirmados `)) +
-  geom_histogram() +
-  labs(title="", x =paste("Quantidade de Casos Confirmados na data",format(unique(covid19pb$` Data `),"%d-%m-%Y.")),
-       y = "")
+wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
 
+## Nuvem de Tags
 
-```{r, fig.width=15,echo=F}
-library(ggplot2)
+```{r, echo=F}
+library(wordcloud)
+library(yarrr)
 
-
-ggplot(
-  covid19pb, aes(`Confirmados `)) +
-  geom_histogram() +
-  labs(title="", x =paste("Quantidade de Casos Confirmados na data",format(unique(covid19pb$` Data `),"%d-%m-%Y.")),
-       y = "")
+wordcloud(words = vetor_palavras, min.freq = 2, random.order = TRUE, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
     
+## Extra: Frequência das palavras
+
+```{r}
+vetor <- Corpus(VectorSource(texto))
+myTable <- TermDocumentMatrix(vetor)
+myTable
+```
 
 
+
+```{r}
+#Convertendo em Matriz
+matriz_palavras <- as.matrix(myTable)
+matriz_palavras[1:5,]
+```
+
+
+---
+
+## Extra: Frequência das palavras
+
+```{r}
+# Ordenando por frequência
+matriz_palavras <- sort(rowSums(matriz_palavras), decreasing = TRUE)
+dataframe_palavras <- data.frame(palavras = names(matriz_palavras), frequencia = matriz_palavras, row.names = NULL)
+
+head(dataframe_palavras,18)
+```
+
+
+---
 
 
 # Fontes
@@ -419,3 +428,6 @@ ggplot(
 * Livro: `Text Mining in Practice with R`;
 
 * [https://github.com/tidyverse/rvest](https://github.com/tidyverse/rvest)
+
+* [https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html](https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html)
+webpage <- read_html(url)

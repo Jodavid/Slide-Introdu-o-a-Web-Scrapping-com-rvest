@@ -3,3 +3,13 @@ xml2
 rvest
 stringr
 ggplot2
+NLP
+tm
+RColorBrewer
+wordcloud
+jpeg
+coda
+Matrix
+BayesFactor
+circlize
+yarrr

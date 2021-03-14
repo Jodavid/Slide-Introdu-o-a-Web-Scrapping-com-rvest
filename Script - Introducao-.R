@@ -56,7 +56,7 @@ head(jarbas_value,3)
 # <>----------------------------
 #Combinando todas as caracteristicas obtidas
 #Retirando primeiro nome
-jarbas_names <- str_extract(jarbas_names,pattern = boundary("word"))
+# jarbas_names <- str_extract(jarbas_names,pattern = boundary("word"))
 #
 jarbas_df <- data.frame(
   Name = jarbas_names,
@@ -121,8 +121,9 @@ myTable
 matriz_palavras <- as.matrix(myTable)
 matriz_palavras
 #ordenando por frequência
-matriz_palavras <- sort(rowSums(matriz_palavras), decreasing = TRUE)
-dataframe_palavras <- data.frame(palavras = names(matriz_palavras), frequencia = matriz_palavras, row.names = NULL)
+vetor_palavras <- sort(rowSums(matriz_palavras), decreasing = TRUE)
+dataframe_palavras <- data.frame(palavras = names(vetor_palavras),
+                                 frequencia = vetor_palavras, row.names = NULL)
 head(dataframe_palavras)
 # <>----------------------------
 # <>----------------------------
@@ -137,27 +138,30 @@ head(dataframe_palavras)
 # install.packages("lexiconPT")
 library(sentiment)
 library(lexiconPT)
+ls("package:sentiment")
 # <>----------------------------
 # <>----------------------------
 # Utilizando o pacote "sentiment" para classificar as emocoes
 emotions <- classify_emotion(texto, algorithm = 'bayes', prior = 1.0)
-head(emotions)
+View(emotions)
 # Utilizando o pacote "sentiment" para classificar as polaridades
 polarities <- classify_polarity(texto, algorithm = "bayes")
-head(polarities)
+View(polarities)
 # Transformando os resultados em data.frame
 df <- data.frame(paragrafos = texto, emocoes = emotions[,'BEST_FIT'],
                  polaridades = polarities[,'BEST_FIT'])
 # Transformando os NA em N.A.
-df[is.na(df)] <- "N.A"
+df[is.na(df)] <- "N.A."
 # <>----------------------------
 # <>----------------------------
 # Gráfico de Barras com polaridades
+X11()
 ggplot(df, aes(polaridades,fill=polaridades)) +
   geom_bar() +
   labs(title="", x ="Polaridades",
        y = "Quantidades") + 
   theme_minimal()
+View(df)
 # <>----------------------------
 # <>----------------------------
 # Gráfico de Setores com emocoes
@@ -189,11 +193,14 @@ neutro <- summarise(df,
 # Juntando em um data.frame
 df2 <- data.frame(polaridades = polaridades_cat,
                   pasted = c(positivo$texto2,negativo$texto2,neutro$texto2))
+View(df2)
+
 df2$pasted <- removeWords(df2$pasted, stopwords(kind = "pt"))
 corpus = Corpus(VectorSource(df2$pasted))
 tdm <- TermDocumentMatrix(corpus)
 tdm <- as.matrix(tdm)
 colnames(tdm) <- unique(df2$polaridades)
+
 # <>----------------------------
 # <>----------------------------
 X11()

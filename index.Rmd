@@ -1,7 +1,7 @@
 ---
 title: "Introdução a Web Scraping com R"
 author: "Jodavid Ferreira"
-#institute: "UFPE"
+institute: "HartB Group"
 date: "`r format(Sys.Date(),'%d.%m.%Y')`"
 output:
   xaringan::moon_reader:
@@ -16,7 +16,9 @@ layout: true
 
 <div class="my-footer"><span>
 
-<a href="http://jodavid.github.io">Jodavid Ferreira</a> - email: <a href="mailto:jdaf1@de.ufpe.br">jdaf1@de.ufpe.br</a>
+<a href="http://jodavid.github.io">Jodavid Ferreira</a> - e-mail: <a href="mailto:jodavid@protonmail.com">jodavid@protonmail.com</a> |
+LinkedIn: <a href="https://www.linkedin.com/in/jodavidferreira/">jodavidferreira</a>
+
 </span></div>
 
 
@@ -341,6 +343,7 @@ head(names)
 
 ---
 
+
 ## Exemplo 2: Texto de Site
   
 ### Passo 3: Preparação dos dados
@@ -350,75 +353,104 @@ Organizando os dados para geração do gráfico da Nuvem de Tags
 * `Corpus`: função que transforma vetores/listas em coleções de documentos que contêm texto.
 
 ```{r}
-# Convertendo a lista em vetor
-dados_str <- unlist(names)
 
 # Início do código para Nuvem de palavras
 library(tm)
 
-texto <- tolower(dados_str) # Colocando as palavras em minusculos
-lista_palavras <- strsplit(texto, "\\W+") # dividindo o texto nas palavras
-vetor_palavras <- Corpus(VectorSource(unlist(lista_palavras))) #Convertendo em formato Corpus
+# -------
+# Colocando as palavras em minusculos
+# -------
+texto <- tolower(names)
+# -------
+# Removendo as stopwords
+texto <- removeWords(texto, stopwords(kind = "portuguese"))
+# -------
 ```
 
 ---
-    
+
+### Passo 3: Preparação dos dados - cont.
+
+```{r}
+# Transformando em formato Corpus
+texto <- Corpus(VectorSource(texto),
+                readerControl = list(reader = reader(VectorSource(texto)),
+                                     language = "pt"))
+# -------
+# Removendo as stopwords de arquivo.txt
+# -------
+file <- url("https://jodavid.github.io/Slide-Introdu-o-a-Web-Scrapping-com-rvest/stopwords_pt_BR.txt")
+stopwords_ptBR <- read.table(file)
+stopwords_ptBR <- unlist(stopwords_ptBR, use.names = FALSE)
+texto <- tm_map(texto, removeWords, stopwords_ptBR)
+
+# -------
+# Descobrindo tamanho da lista
+n <- length(texto)
+# -------
+# Removendo pontuacao
+for(i in 1:n)
+  {
+    # Remover pontuacao, preservando abreviacoes
+    texto[[i]] <- removePunctuation(texto[[i]],
+                                    preserve_intra_word_contractions = TRUE,
+                                    preserve_intra_word_dashes = TRUE)
+    # Removendo quotations
+    texto[[i]] <- stringr::str_replace_all(texto[[i]], setNames(c('','','',''), c('“ ', '“',' ”','”')))
+  }
+# -------
+```
+
+---
+
 ### Passo 4: Geração de um gráfico de Nuvem de Tags
   
 Foram utilizados o data.frame e uma biblioteca *ggplot2* para geração do gráfico.
 
-```{r, eval=FALSE}
+
+```{r eval=FALSE}
 library(wordcloud)
 library(yarrr)
 
-wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE,
+wordcloud(words = texto, min.freq = 2, random.order = TRUE,
           colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
 
-## Nuvem de Tags
-
-```{r, echo=F}
+```{r echo=FALSE}
 library(wordcloud)
 library(yarrr)
 
-wordcloud(words = vetor_palavras, min.freq = 2, random.order = TRUE,
+wordcloud(words = texto, min.freq = 2, random.order = TRUE,
           colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
----
-    
-## Extra: Frequência das palavras
-
-```{r}
-vetor <- Corpus(VectorSource(texto))
-myTable <- TermDocumentMatrix(vetor)
-myTable
-```
-
-
-
-```{r}
-#Convertendo em Matriz
-matriz_palavras <- as.matrix(myTable)
-matriz_palavras[1:5,]
-```
-
 
 ---
 
+
 ## Extra: Frequência das palavras
 
+
 ```{r}
-# Ordenando por frequência
-matriz_palavras <- sort(rowSums(matriz_palavras), decreasing = TRUE)
-dataframe_palavras <- data.frame(palavras = names(matriz_palavras),
-                                 frequencia = matriz_palavras, row.names = NULL)
+#' -------
+#' Transformando o arquivo 'texto' que estava no tipo Corpus para Data.frame
+#' -------
+textodataframe <- data.frame(text = sapply(texto, as.character),
+                             stringsAsFactors = FALSE)
+textodataframe <- textodataframe[-which(textodataframe ==""),]
 
-head(dataframe_palavras,18)
+#' --------------
+#' Frequencia das palavras
+#' --------------
+frequencia_palavras <- table( textodataframe )
+frequencia_ordenada_palavras <- sort( frequencia_palavras, decreasing=TRUE)
+palavras <- data.frame(frequencia_ordenada_palavras)
+
+head(palavras,6)
+
 ```
-
 
 ---
 
@@ -438,36 +470,118 @@ Fonte: [https://binds.co/img/section/faces-sentiment.png](https://binds.co/img/s
 
 ## Extra: Análise de Sentimentos
 
-Essa parte foi baseada no no vídeo [https://youtu.be/YRUfYxoRssY](https://youtu.be/YRUfYxoRssY) do
-canal **EstaTiDados**.
+Uma das formas mais antigas para tratar desse problema é por meio do algoritmo de Naive Bayes que é um classificador probabilístico, e parte da premissa que há independência entre as características (variáveis - features) de um modelo, uu seja, ele recebe o nome de “naive” (ingênuo) porque desconsidera a correlação entre as variáveis (features).
+
+Post: [https://jodavid.github.io/post/2021-06-06-scraping-de-texto-com-an%C3%A1lise-de-sentimento-em-r/](https://jodavid.github.io/post/2021-06-06-scraping-de-texto-com-an%C3%A1lise-de-sentimento-em-r/)
+
+
+```{r, echo = FALSE, out.width="75%", fig.cap="<center><b>sentimentBR</center></b>"}
+knitr::include_graphics("imagens/sentimentBR.png")
+```
+
+---
+
+# Pacote `sentimentBR`
+
+<br/>
+<br/>
+
+```{r, echo = FALSE, out.width="20%", fig.cap="<center><b>Logo - sentimentBR </center></b>"}
+knitr::include_graphics("https://jodavid.github.io/sentimentBR/reference/figures/logo.png")
+```
+
+<br/>
+
+Link: [https://jodavid.github.io/sentimentBR/](https://jodavid.github.io/sentimentBR/)
+
+Este é um pacote inicial com o intuito de juntar as funções e dicionários cada vez mais em português para que seja possível realizar uma **Análise de Sentimento** cada vez mais eficiente e com boa confiabilidade.
+
+---
+
+# Instalando o `sentimentBR`
+
+```{r eval=FALSE}
+# Instalação utilizando o pacote devtools
+install.packages("devtools")
+
+# Instalação do pacote de dependência
+install.packages("Rstem", repos = "http://www.omegahat.net/R")
+
+# Instação do pacote sentimentBR
+devtools::install_github("jodavid/sentimentBR")
+```
+
+Lendo o pacote
+
+```{r eval=FALSE}
+# Lendo o pacote
+library(sentimentBR)
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+A Classificação será feita no DataFrame das frases,
+vamos retornar a matriz:
+
+A matriz de dados está nomeada como `texto` no slide 17.
 
 ```{r}
-# library(devtools)
-# install_github("abhy/Rstem")
-# install_github("abhy/sentiment")
-# install.packages("lexiconPT")
-library(sentiment)
+
+# -------
+# Pacotes Necessários
+library(sentimentBR)
 library(lexiconPT)
+# -------
 
-# Utilizando o pacote "sentiment" para classificar as emocoes
-emotions <- classify_emotion(texto, algorithm = 'bayes', prior = 1.0)
-head(emotions)
+# -------
+# Transformando o arquivo 'texto' que estava no tipo Corpus para Data.frame
+textodataframe <- data.frame(text = sapply(texto, as.character), stringsAsFactors = FALSE)
+# -------
+
 ```
 
 ---
 
 ## Extra: Análise de Sentimentos
+
+Usando a função classify_emotion para classificar as emoções. É possível obter seis níveis de emoções: **RAIVA, DESGOSTO, MEDO, ALEGRIA, TRISTEZA, SURPRESA, CONFIANÇA, POSITIVA, NEGATIVA, ANTECIPAÇÃO**.
+
+```{r out.width=.5}
+
+# -------
+# Classificando as emocoes de cada paragrafo
+emotions <- classify_emotion(textColumns = textodataframe, algorithm = 'bayes', lang = "pt")
+emotions
+
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+
+```{r out.width=.5}
+
+# -------
+# Quantos Parágrafos
+nrow(emotions)
+
+# -------
+# Tabela das classificações
+table(emotions[,11])
+
+```
+
+Calculando as Polaridades
 
 ```{r}
-# Utilizando o pacote "sentiment" para classificar as polaridades
-polarities <- classify_polarity(texto, algorithm = "bayes")
-head(polarities)
 
-# Transformando os resultados em data.frame
-df <- data.frame(paragrafos = texto, emocoes = emotions[,'BEST_FIT'],
-                 polaridades = polarities[,'BEST_FIT'])
-# Transformando os NA em N.A.
-df[is.na(df)] <- "N.A"
+# -------
+# Classificando a polaridade de cada paragrafi
+polarities <- classify_polarity(textColumns = textodataframe, algorithm = "bayes")
+head(polarities,1)
 
 ```
 
@@ -475,84 +589,99 @@ df[is.na(df)] <- "N.A"
 
 ## Extra: Análise de Sentimentos
 
-```{r, fig.width=15}
-# <>----------------------------
-# Gráfico de Barras com polaridades
+Neste caso também a classificação é obtida na última coluna denominada de `BEST_FIT`.
+
+```{r}
+# -------
+# Transformando os resultados em data.frame
+df <- data.frame(paragrafos = textodataframe,
+                 emocoes = emotions[,'BEST_FIT'],
+                 polaridades = polarities[,'BEST_FIT'])
+# Transformando os 'NA' em 'N.A.'
+df[is.na(df)] <- "N.A."
+# -------
+
+```
+
+---
+
+### Criando um gráfico de Barras com as polaridades
+
+```{r fig.width=7, fig.height=4}
+# -------
+# Pacote Necessário
+library(ggplot2)
+# -------
 ggplot(df, aes(polaridades,fill=polaridades)) +
   geom_bar() +
   labs(title="", x ="Polaridades",
        y = "Quantidades") + 
   theme_minimal()
-# <>----------------------------
 ```
 
 ---
 
-## Extra: Análise de Sentimentos
 
-```{r, fig.width=15}
-# <>----------------------------
-# Gráfico de Setores com emocoes
-emotions <- data.frame(emotions)
-ggplot(emotions, aes(x=factor(1), fill=factor(BEST_FIT))) +
-  geom_bar(width = 1) +
-  coord_polar(theta = "y") +
-  labs(title="", x ="x",
-       y = "y")
-# <>----------------------------
+### Criando um gráfico de Barras e Setores com 'emocoes'
+
+```{r fig.width=7, fig.height=4}
+# -------
+ggplot(df, aes(emocoes,fill=emocoes)) +
+  geom_bar() +
+  labs(title="", x ="Emoções",
+       y = "Quantidades") + 
+  theme_minimal()
 ```
 
 ---
 
-## Extra: Análise de Sentimentos
+## Gráfico de Nuvem de tags com polaridades
 
 ```{r}
+# -------
+# Pacote Necessário
 library(dplyr)
-# Gráfico de Nuvem de tags com polaridades
-#
+# -------
 # Dividindo o texto nas polaridades
 polaridades_cat <- unique(df$polaridades)
-# Separando os textos de postivo
-positivo <- summarise(df,
-                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[1])],
-                                     collapse = " "))
-# Separando os textos de Negativo
-negativo <- summarise(df,
-                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[2])],
-                                     collapse = " "))
-# Separando os textos de Neutro
-neutro <- summarise(df,
-                    texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[3])],
-                                   collapse = " "))
-# Juntando em um data.frame
-df2 <- data.frame(polaridades = polaridades_cat,
-                  pasted = c(positivo$texto2,negativo$texto2,neutro$texto2))
-df2$pasted <- removeWords(df2$pasted, stopwords(kind = "pt"))
-corpus = Corpus(VectorSource(df2$pasted))
+# -------
+df2 <- t( sapply(1:length(polaridades_cat),function(i){
+        polaridade <- summarise(df,
+                                texto2 = paste(df$text[which(df$polaridades==polaridades_cat[i])],
+                                               collapse = " "));
+  
+  return(c(polaridades = polaridades_cat[i],
+         pasted = c(polaridade$texto2)))
+}) )
+# -------
+corpus <- Corpus(VectorSource(df2[,2]))
+corpus <- tm_map(corpus, removeNumbers)
 tdm <- TermDocumentMatrix(corpus)
 tdm <- as.matrix(tdm)
-colnames(tdm) <- unique(df2$polaridades)
-# <>----------------------------
+colnames(tdm) <- unique(df2[,1])
+# -------
 ```
 
 ---
 
-## Extra: Análise de Sentimentos
+## Gráfico de Nuvem de tags com polaridades
 
-```{r, fig.width=10, fig.height=5}
+```{r fig.width=7, fig.height=4}
+# -------
+# Gerando Gráfico
 comparison.cloud(tdm,
                  colors = yarrr::piratepal("basel"),
                  scale = c(3,.5),random.order = F)
 ```
 
-
 ---
+
 
 # Script R 
 
 Segue abaixo o link para o Script **R** ulitizado:
 
-[Script R - Clique Aqui!](https://jodavid.github.io/Slide-Introdu-o-a-Web-Scrapping-com-rvest/Script%20-%20Introducao-.R)
+[Script R - Clique Aqui!](#)
 
 
 # Fontes

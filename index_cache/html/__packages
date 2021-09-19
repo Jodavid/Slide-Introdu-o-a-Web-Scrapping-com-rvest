@@ -1,5 +1,4 @@
 base
-xml2
 rvest
 stringr
 ggplot2
@@ -14,6 +13,6 @@ BayesFactor
 circlize
 yarrr
 Rstem
-sentiment
+sentimentBR
 lexiconPT
 dplyr

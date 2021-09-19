@@ -1,6 +1,6 @@
 # <>-------------------------------------------------------------
 # APP: Introducao a WebScraping com R
-# data: 03.02.2021
+# data: 19.09.2021
 # Objetivo: Obter dados de paginas web atraves de funcoes do R
 #
 # Obs.: Serao ocultados os acentos por questao da codificacao
@@ -83,38 +83,78 @@ ggplot(
 # <>-------------------------------------------------------------
 #EXEMPLO 2: Texto de um WebSite
 # 1- LER URL
+# -------
+# Pacote Necessário para Scraping
 library(rvest)
+# -------
+# URL
 url <- "https://brasil.elpais.com/brasil/2021-01-26/todos-os-brasileiros-estao-com-seus-dados-a-venda-e-ha-muito-pouco-o-que-se-pode-fazer-para-se-proteger.html"
+# -------
+# Lendo a Página
 webpage <- read_html(url)
 # <>----------------------------
 # <>----------------------------
 # Passo 2: Extraindo texto de Site
 #Scraping  usando classe css ‘p’
 names_html <-html_nodes(webpage, 'p')
+# -------
+# Retirando o texto retornados da classe 'p'
 names <- html_text(names_html)
+# -------
 head(names)
 # <>----------------------------
 # <>----------------------------
 # Passo 3: Preparação dos dados
-#Convertendo a lista em vetor
-dados_str <- unlist(names)
-# inicio do código para Nuvem de palavras
+# Início do código para Nuvem de palavras
 library(tm)
-library(wordcloud)
-texto <- tolower(dados_str) # Colocando as palavras em minusculos
-texto <- removeWords(texto, stopwords(kind = "pt"))
-lista_palavras <- strsplit(texto, "\\W+")
-vetor_palavras <- Corpus(VectorSource(unlist(lista_palavras)))
+# -------
+# Colocando as palavras em minusculos
+# -------
+texto <- tolower(names)
+# -------
+# Removendo as stopwords
+texto <- removeWords(texto, stopwords(kind = "portuguese"))
+# -------
+# Transformando em formato Corpus
+texto <- Corpus(VectorSource(texto),
+                readerControl = list(reader = reader(VectorSource(texto)),
+                                     language = "pt"))
+# -------
+# Removendo as stopwords de arquivo.txt
+# -------
+file <- url("https://jodavid.github.io/Slide-Introdu-o-a-Web-Scrapping-com-rvest/stopwords_pt_BR.txt")
+stopwords_ptBR <- read.table(file)
+stopwords_ptBR <- unlist(stopwords_ptBR, use.names = FALSE)
+texto <- tm_map(texto, removeWords, stopwords_ptBR)
+
+# -------
+# Descobrindo tamanho da lista
+n <- length(texto)
+# -------
+# Removendo pontuacao
+for(i in 1:n)
+{
+  # Remover pontuacao, preservando abreviacoes
+  texto[[i]] <- removePunctuation(texto[[i]],
+                                  preserve_intra_word_contractions = TRUE,
+                                  preserve_intra_word_dashes = TRUE)
+  # Removendo quotations
+  texto[[i]] <- stringr::str_replace_all(texto[[i]], setNames(c('','','',''), c('“ ', '“',' ”','”')))
+}
+# -------
 # <>----------------------------
 # <>----------------------------
 # Passo 4: Geração de um gráfico de Nuvem de Tags
 # Abrindo Janela para Gráfico
 X11()
-wordcloud(words = vetor_palavras, min.freq = 2, random.order = F, colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
+library(wordcloud)
+library(yarrr)
+wordcloud(words = texto, min.freq = 2, random.order = TRUE,
+          colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 # <>----------------------------
 # <>----------------------------
 # Extra:
-vetor <- Corpus(VectorSource(texto))
+vetor <- texto#Corpus(VectorSource(texto))
 myTable <- TermDocumentMatrix(vetor)
 myTable
 #Convertendo em Matriz
@@ -136,25 +176,28 @@ head(dataframe_palavras)
 # install_github("abhy/Rstem")
 # install_github("abhy/sentiment")
 # install.packages("lexiconPT")
-library(sentiment)
+library(sentimentBR)
 library(lexiconPT)
-ls("package:sentiment")
+
 # <>----------------------------
 # <>----------------------------
+dataframe <- data.frame(text = sapply(texto, as.character), stringsAsFactors = FALSE)
 # Utilizando o pacote "sentiment" para classificar as emocoes
-emotions <- classify_emotion(texto, algorithm = 'bayes', prior = 1.0)
+#emotions <- classify_emotion(dataframe, algorithm = 'bayes', prior = 0.1)
+emotions <- classify_emotion(textColumns = dataframe, algorithm = 'bayes', lang = "pt")
 View(emotions)
 # Utilizando o pacote "sentiment" para classificar as polaridades
-polarities <- classify_polarity(texto, algorithm = "bayes")
+polarities <- classify_polarity(textColumns = dataframe, algorithm = "bayes")
 View(polarities)
 # Transformando os resultados em data.frame
-df <- data.frame(paragrafos = texto, emocoes = emotions[,'BEST_FIT'],
+df <- data.frame(paragrafos = dataframe, emocoes = emotions[,'BEST_FIT'],
                  polaridades = polarities[,'BEST_FIT'])
 # Transformando os NA em N.A.
 df[is.na(df)] <- "N.A."
 # <>----------------------------
 # <>----------------------------
 # Gráfico de Barras com polaridades
+library(ggplot2)
 X11()
 ggplot(df, aes(polaridades,fill=polaridades)) +
   geom_bar() +
@@ -180,23 +223,23 @@ library(dplyr)
 polaridades_cat <- unique(df$polaridades)
 # Separando os textos de postivo
 positivo <- summarise(df,
-                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[1])],
+                      texto2 = paste(df$text[which(df$polaridades==polaridades_cat[1])],
                                      collapse = " "))
 # Separando os textos de Negativo
 negativo <- summarise(df,
-                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[2])],
+                      texto2 = paste(df$text[which(df$polaridades==polaridades_cat[2])],
                                      collapse = " "))
 # Separando os textos de Neutro
 neutro <- summarise(df,
-                    texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[3])],
+                    texto2 = paste(df$text[which(df$polaridades==polaridades_cat[3])],
                                    collapse = " "))
 # Juntando em um data.frame
 df2 <- data.frame(polaridades = polaridades_cat,
                   pasted = c(positivo$texto2,negativo$texto2,neutro$texto2))
 View(df2)
-
-df2$pasted <- removeWords(df2$pasted, stopwords(kind = "pt"))
-corpus = Corpus(VectorSource(df2$pasted))
+# ------------
+corpus <- Corpus(VectorSource(df2$pasted))
+corpus <- tm_map(corpus, removeNumbers)
 tdm <- TermDocumentMatrix(corpus)
 tdm <- as.matrix(tdm)
 colnames(tdm) <- unique(df2$polaridades)

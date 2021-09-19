@@ -15,7 +15,8 @@ class: center, middle, inverse, title-slide
 
 # Introdução a Web Scraping com R
 ### Jodavid Ferreira
-### 03.02.2021
+### HartB Group
+### 19.09.2021
 
 ---
 
@@ -23,7 +24,9 @@ layout: true
 
 &lt;div class="my-footer"&gt;&lt;span&gt;
 
-&lt;a href="http://jodavid.github.io"&gt;Jodavid Ferreira&lt;/a&gt; - email: &lt;a href="mailto:jdaf1@de.ufpe.br"&gt;jdaf1@de.ufpe.br&lt;/a&gt;
+&lt;a href="http://jodavid.github.io"&gt;Jodavid Ferreira&lt;/a&gt; - e-mail: &lt;a href="mailto:jodavid@protonmail.com"&gt;jodavid@protonmail.com&lt;/a&gt; |
+LinkedIn: &lt;a href="https://www.linkedin.com/in/jodavidferreira/"&gt;jodavidferreira&lt;/a&gt;
+
 &lt;/span&gt;&lt;/div&gt;
 
 
@@ -214,7 +217,7 @@ head(jarbas_names,3)
 ```
 
 ```
-## [1] "Valmir Assunção" "Hélio Leite"     "Hélio Leite"
+## [1] "Igor Kannário" "Abou Anni"     "Bozzella"
 ```
 
 ---
@@ -233,7 +236,7 @@ head(jarbas_subquota,3)
 ```
 
 ```
-## [1] "Combustíveis e lubrificantes"        "Divulgação da atividade parlamentar" "Divulgação da atividade parlamentar"
+## [1] "Serviços postais" "Serviços postais" "Serviços postais"
 ```
 
 ```r
@@ -244,7 +247,7 @@ head(jarbas_provider,3)
 ```
 
 ```
-## [1] "POSTO MK 107 NORTE LTDA05.625.571/0001-35"                         "PRISCILLA DE CASSIA PORTELA VINHOTE 7054665724934.314.072/0001-25" "M SANTOS GUIMARAES EIRELI23.936.281/0001-94"
+## [1] "CORREIOS - CAIXA DE ENCOMENDAS BÁSICA/CONVENCIONAL00.000.000/0000-07" "CORREIOS - MALA DIRETA ENDEREÇADA (POSTAL BÁSICA)00.000.000/0000-07"  "CORREIOS - CARTA REGISTRADA00.000.000/0000-07"
 ```
 
 ```r
@@ -255,7 +258,7 @@ head(jarbas_value,3)
 ```
 
 ```
-## [1] "R$ 198,84" "R$ 900,00" "R$ 300,00"
+## [1] "R$ 11,30"  "R$ 255,22" "R$ 96,00"
 ```
 
 ---
@@ -278,7 +281,7 @@ head(jarbas_value,3)
 ```
 
 ```
-## [1] 198.84 900.00 300.00
+## [1]  11.30 255.22  96.00
 ```
 
 ---
@@ -304,10 +307,10 @@ str(jarbas_df)
 
 ```
 ## 'data.frame':	100 obs. of  4 variables:
-##  $ Name    : chr  "Valmir" "Hélio" "Hélio" "Hélio" ...
-##  $ Subquota: chr  "Combustíveis e lubrificantes" "Divulgação da atividade parlamentar" "Divulgação da atividade parlamentar" "Combustíveis e lubrificantes" ...
-##  $ Provider: chr  "POSTO MK 107 NORTE LTDA05.625.571/0001-35" "PRISCILLA DE CASSIA PORTELA VINHOTE 7054665724934.314.072/0001-25" "M SANTOS GUIMARAES EIRELI23.936.281/0001-94" "SUPER POSTO PALMEIRA LTDA83.838.839/0001-20" ...
-##  $ Value   : num  199 900 300 5022 13000 ...
+##  $ Name    : chr  "Igor" "Abou" "Bozzella" "Isnaldo" ...
+##  $ Subquota: chr  "Serviços postais" "Serviços postais" "Serviços postais" "Serviços postais" ...
+##  $ Provider: chr  "CORREIOS - CAIXA DE ENCOMENDAS BÁSICA/CONVENCIONAL00.000.000/0000-07" "CORREIOS - MALA DIRETA ENDEREÇADA (POSTAL BÁSICA)00.000.000/0000-07" "CORREIOS - CARTA REGISTRADA00.000.000/0000-07" "CORREIOS - ENCOMENDA PAC00.000.000/0000-07" ...
+##  $ Value   : num  11.3 255.2 96 999.3 200 ...
 ```
 
 ---
@@ -378,11 +381,16 @@ head(names)
 ```
 
 ```
-## [1] "Este navegador não é mais compatível. Para visitar EL PAÍS com a melhor experiência, atualize-o para a versão mais recente ou baixe um dos seguintes navegadores compatíveis:"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "Um megavazamento de dados pessoais de 223 milhões de brasileiros tornado público na semana passada pela empresa de segurança digital PSafe pode ser o maior na história do país e tem tudo para ser a primeira prova de fogo da Autoridade Nacional de Proteção de Dados (ANPD), criada a partir da entrada em vigor da Lei Geral de Proteção de Dados (LGPD) em agosto do ano passado. Também é o primeiro incidente desta magnitude que se tem notícia no Brasil. A lista com milhões de nomes completos, CPFs e datas de nascimento —de pessoas vivas e mortas— estava disponível para download gratuito a partir de um fórum de discussão na deep web —cópias do arquivo original foram feitas e podiam ser encontradas por qualquer um a partir de buscadores de internet. Em troca de bitcoins, o perfil anônimo responsável pelo vazamento dizia ser possível obter ainda retratos, endereço, telefone, declaração do Imposto de Renda, listas de familiares, renda mensal, score de crédito e muito mais dos alvos em questão. Na terça-feira, após a repercussão do caso, o material foi retirado do ar no fórum de livre acesso com qualquer navegador, mas continua em negociação na deep web." "Na lista há dados de gente famosa e autoridades públicas. De acordo com a PSafe, cibercriminosos também tiveram acesso a informações detalhadas sobre mais de 104 milhões de veículos e dados sigilosos de 40 milhões de empresas."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "“O vazamento é real, confirmada a autenticidade de todos os dados, é o maior vazamento da história do Brasil e certamente um dos maiores do mundo”, afirma Marco DeMello, CEO da PSafe. “Estávamos monitorando a deep web para alguns de nossos clientes e nos deparamos com milhões de CPNJs em negociação, rastreamos e chegamos na fonte”, diz. Ele afirma que a equipe de segurança da empresa entrou em contato com o hacker, que disse cobrar 100 dólares por pacotes com os registros de mil pessoas, empresas ou veículos. Ele diz não ser brasileiro e que vai vender no máximo 1 milhão de contatos para cada comprador, pois pretende ganhar dinheiro com essa base de dados por muito tempo ainda. Segundo DeMello, nas conversas o hacker diz que roubou a base dados da Serasa/Experian, empresa de análise de crédito que cria perfis dos consumidores brasileiros entre outras atividades, mas não tem como saber se isso é verdade. A mesma alegação aparece na página onde ele vende o material, assim como no nome de alguns arquivos."                                                                                                                                                
-## [5] "Apoie a produção de notícias como esta. Assine o EL PAÍS por 30 dias por 1 US$"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Procurada pela reportagem através de sua assessoria de imprensa, a Serasa/Experian respondeu, após a publicação, que a empresa não é a fonte dos dados vazados. “Embora o hacker afirme que parte dos dados veio da Serasa, com base em nossa análise detalhada até este ponto, concluímos que a Serasa não é a fonte”, diz a nota enviada. “Também não vemos evidências de que nossos sistemas tenham sido comprometidos”, afirma a empresa, que ainda diz não possuir todos os dados oferecidos na internet e que está em contato com autoridades reguladoras para ajudar no caso. "
+## [1] "Este navegador não é mais compatível. Para visitar EL PAÍS com a melhor experiência, atualize-o para a versão mais recente ou baixe um dos seguintes navegadores compatíveis:"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+## [2] "Um megavazamento de dados pessoais de 223 milhões de brasileiros tornado público na semana passada pela empresa de segurança digital PSafe pode ser o maior na história do país e tem tudo para ser a primeira prova de fogo da Autoridade Nacional de Proteção de Dados (ANPD), criada a partir da entrada em vigor da Lei Geral de Proteção de Dados (LGPD) em agosto do ano passado. Também é o primeiro incidente desta magnitude que se tem notícia no Brasil. A lista com milhões de nomes completos, CPFs e datas de nascimento —de pessoas vivas e mortas— estava disponível para download gratuito a partir de um fórum de discussão na deep web —cópias do arquivo original foram feitas e podiam ser encontradas por qualquer um a partir de buscadores de internet. Em troca de bitcoins, o perfil anônimo responsável pelo vazamento dizia ser possível obter ainda retratos, endereço, telefone, declaração do Imposto de Renda, listas de familiares, renda mensal, score de crédito e muito mais dos alvos em questão. Na terça-feira, após a repercussão do caso, o material foi retirado do ar no fórum de livre acesso com qualquer navegador, mas continua em negociação na deep web."
+## [3] "Na lista há dados de gente famosa e autoridades públicas. De acordo com a PSafe, cibercriminosos também tiveram acesso a informações detalhadas sobre mais de 104 milhões de veículos e dados sigilosos de 40 milhões de empresas."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+## [4] "“O vazamento é real, confirmada a autenticidade de todos os dados, é o maior vazamento da história do Brasil e certamente um dos maiores do mundo”, afirma Marco DeMello, CEO da PSafe. “Estávamos monitorando a deep web para alguns de nossos clientes e nos deparamos com milhões de CPNJs em negociação, rastreamos e chegamos na fonte”, diz. Ele afirma que a equipe de segurança da empresa entrou em contato com o hacker, que disse cobrar 100 dólares por pacotes com os registros de mil pessoas, empresas ou veículos. Ele diz não ser brasileiro e que vai vender no máximo 1 milhão de contatos para cada comprador, pois pretende ganhar dinheiro com essa base de dados por muito tempo ainda. Segundo DeMello, nas conversas o hacker diz que roubou a base dados da Serasa/Experian, empresa de análise de crédito que cria perfis dos consumidores brasileiros entre outras atividades, mas não tem como saber se isso é verdade. A mesma alegação aparece na página onde ele vende o material, assim como no nome de alguns arquivos."                                                                                                                                                
+## [5] "Apoie a produção de notícias como esta. Assine o EL PAÍS por 30 dias por 1 US$"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+## [6] "Procurada pela reportagem através de sua assessoria de imprensa, a Serasa/Experian respondeu, após a publicação, que a empresa não é a fonte dos dados vazados. “Embora o hacker afirme que parte dos dados veio da Serasa, com base em nossa análise detalhada até este ponto, concluímos que a Serasa não é a fonte”, diz a nota enviada. “Também não vemos evidências de que nossos sistemas tenham sido comprometidos”, afirma a empresa, que ainda diz não possuir todos os dados oferecidos na internet e que está em contato com autoridades reguladoras para ajudar no caso. "
 ```
 
 ---
+
 
 ## Exemplo 2: Texto de Site
   
@@ -394,113 +402,109 @@ Organizando os dados para geração do gráfico da Nuvem de Tags
 
 
 ```r
-# Convertendo a lista em vetor
-dados_str &lt;- unlist(names)
-
 # Início do código para Nuvem de palavras
 library(tm)
 
-texto &lt;- tolower(dados_str) # Colocando as palavras em minusculos
-lista_palavras &lt;- strsplit(texto, "\\W+") # dividindo o texto nas palavras
-vetor_palavras &lt;- Corpus(VectorSource(unlist(lista_palavras))) #Convertendo em formato Corpus
+# -------
+# Colocando as palavras em minusculos
+# -------
+texto &lt;- tolower(names)
+# -------
+# Removendo as stopwords
+texto &lt;- removeWords(texto, stopwords(kind = "portuguese"))
+# -------
 ```
 
 ---
-    
+
+### Passo 3: Preparação dos dados - cont.
+
+
+```r
+# Transformando em formato Corpus
+texto &lt;- Corpus(VectorSource(texto),
+                readerControl = list(reader = reader(VectorSource(texto)),
+                                     language = "pt"))
+# -------
+# Removendo as stopwords de arquivo.txt
+# -------
+file &lt;- url("https://jodavid.github.io/Slide-Introdu-o-a-Web-Scrapping-com-rvest/stopwords_pt_BR.txt")
+stopwords_ptBR &lt;- read.table(file)
+stopwords_ptBR &lt;- unlist(stopwords_ptBR, use.names = FALSE)
+texto &lt;- tm_map(texto, removeWords, stopwords_ptBR)
+
+# -------
+# Descobrindo tamanho da lista
+n &lt;- length(texto)
+# -------
+# Removendo pontuacao
+for(i in 1:n)
+  {
+    # Remover pontuacao, preservando abreviacoes
+    texto[[i]] &lt;- removePunctuation(texto[[i]],
+                                    preserve_intra_word_contractions = TRUE,
+                                    preserve_intra_word_dashes = TRUE)
+    # Removendo quotations
+    texto[[i]] &lt;- stringr::str_replace_all(texto[[i]], setNames(c('','','',''), c('“ ', '“',' ”','”')))
+  }
+# -------
+```
+
+---
+
 ### Passo 4: Geração de um gráfico de Nuvem de Tags
   
 Foram utilizados o data.frame e uma biblioteca *ggplot2* para geração do gráfico.
+
 
 
 ```r
 library(wordcloud)
 library(yarrr)
 
-wordcloud(words = vetor_palavras, min.freq = 3, random.order = TRUE,
+wordcloud(words = texto, min.freq = 2, random.order = TRUE,
           colors = yarrr::piratepal("basel"), use.r.layout = TRUE, rot.per = 0.5)
 ```
 
 ---
 
-## Nuvem de Tags
-
-&lt;img src="index_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
-
----
-    
-## Extra: Frequência das palavras
-
-
-```r
-vetor &lt;- Corpus(VectorSource(texto))
-myTable &lt;- TermDocumentMatrix(vetor)
-myTable
-```
-
-```
-## &lt;&lt;TermDocumentMatrix (terms: 547, documents: 13)&gt;&gt;
-## Non-/sparse entries: 768/6343
-## Sparsity           : 89%
-## Maximal term length: 16
-## Weighting          : term frequency (tf)
-```
-
-
-
-
-```r
-#Convertendo em Matriz
-matriz_palavras &lt;- as.matrix(myTable)
-matriz_palavras[1:5,]
-```
-
-```
-##               Docs
-## Terms          1 2 3 4 5 6 7 8 9 10 11 12 13
-##   atualize-o   1 0 0 0 0 0 0 0 0  0  0  0  0
-##   baixe        1 0 0 0 0 0 0 0 0  0  0  0  0
-##   com          1 2 1 4 0 2 1 1 3  1  1  0  0
-##   compatíveis: 1 0 0 0 0 0 0 0 0  0  0  0  0
-##   compatível.  1 0 0 0 0 0 0 0 0  0  0  0  0
-```
+&lt;img src="index_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
+
 ## Extra: Frequência das palavras
 
 
+
 ```r
-# Ordenando por frequência
-matriz_palavras &lt;- sort(rowSums(matriz_palavras), decreasing = TRUE)
-dataframe_palavras &lt;- data.frame(palavras = names(matriz_palavras),
-                                 frequencia = matriz_palavras, row.names = NULL)
+#' -------
+#' Transformando o arquivo 'texto' que estava no tipo Corpus para Data.frame
+#' -------
+textodataframe &lt;- data.frame(text = sapply(texto, as.character),
+                             stringsAsFactors = FALSE)
+textodataframe &lt;- textodataframe[-which(textodataframe ==""),]
 
-head(dataframe_palavras,18)
+#' --------------
+#' Frequencia das palavras
+#' --------------
+frequencia_palavras &lt;- table( textodataframe )
+frequencia_ordenada_palavras &lt;- sort( frequencia_palavras, decreasing=TRUE)
+palavras &lt;- data.frame(frequencia_ordenada_palavras)
+
+head(palavras,6)
 ```
 
 ```
-##     palavras frequencia
-## 1        que         25
-## 2      dados         20
-## 3        com         17
-## 4       para         16
-## 5        ser         13
-## 6        não         12
-## 7        dos         10
-## 8        por         10
-## 9        diz          7
-## 10   milhões          6
-## 11      como          6
-## 12       uma          6
-## 13   empresa          5
-## 14      pela          5
-## 15 vazamento          5
-## 16     todos          5
-## 17       até          5
-## 18      mais          4
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                      textodataframe Freq
+## 1                                            hacker responsável  vazamento    profissional     difícil rastrear  identidade  origem   virtualmente   brasileiros    dados  venda  internet        concreto  possa    executivo acredita   anpd ministério púbico federal  polícia federal  investigar  história demello alerta    ficar atentos  movimentações atípicas  conta bancária  cartão  crédito   avisos  cobranças   pistas    possa   utilizado   fraude    1
+## 2                                                                                                                                                                                                                                                                                                                                                                                                                                           ler  textos gratuitos      1
+## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                         assinante    1
+## 4            dados  disponíveis  fórum  discussões   começo     identificados  empresa  segurança  terça-feira  semana passada    extraídos  fonte original  18   2018  2020   ceo  psafe  informações  checadas  amostragem   reais assustador    qualquer golpista  comprar  dados    inimagináveis      comprar  vender veículos  imóveis contrair dívidas invadir contas bancárias   sistemas informatizados  usam  imagens abrir empresas  estrago     demello    1
+## 5  el país  conversou   profissional  tecnologia  informação   acesso  material disponibilizado  graça  testar  veracidade  cerca   nomes aleatórios sugeridos  reportagem  busca  banco  dados  profissional voltou   resultados corretos  cpf  data  nascimento    casos   gênero  quase  baixei  queria saber   material   verdade     gente  pegou  dados  usar    intencionada    pediu    identificado  reportagem        cópia  dados cometeu  ilegalidade      1
+## 6                                                                                           lei   proteção  dados  entregou    vigor possui  artigos  versam  incidentes  segurança   criação  planos  resposta  incidentes  segurança  empresas  entes públicos prevê sanções     advertência   multa     faturamento anual     50 milhões  reais   proibição  fonte  vazamento  continuar  tratar dados sensíveis  entanto  punições    aplicadas    agosto  2021    1
 ```
-
 
 ---
 
@@ -521,31 +525,116 @@ Fonte: [https://binds.co/img/section/faces-sentiment.png](https://binds.co/img/s
 
 ## Extra: Análise de Sentimentos
 
-Essa parte foi baseada no no vídeo [https://youtu.be/YRUfYxoRssY](https://youtu.be/YRUfYxoRssY) do
-canal **EstaTiDados**.
+Uma das formas mais antigas para tratar desse problema é por meio do algoritmo de Naive Bayes que é um classificador probabilístico, e parte da premissa que há independência entre as características (variáveis - features) de um modelo, uu seja, ele recebe o nome de “naive” (ingênuo) porque desconsidera a correlação entre as variáveis (features).
+
+Post: [https://jodavid.github.io/post/2021-06-06-scraping-de-texto-com-an%C3%A1lise-de-sentimento-em-r/](https://jodavid.github.io/post/2021-06-06-scraping-de-texto-com-an%C3%A1lise-de-sentimento-em-r/)
+
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="imagens/sentimentBR.png" alt="&amp;lt;center&amp;gt;&amp;lt;b&amp;gt;sentimentBR&amp;lt;/center&amp;gt;&amp;lt;/b&amp;gt;" width="75%" /&gt;
+&lt;p class="caption"&gt;&lt;center&gt;&lt;b&gt;sentimentBR&lt;/center&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# Pacote `sentimentBR`
+
+&lt;br/&gt;
+&lt;br/&gt;
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://jodavid.github.io/sentimentBR/reference/figures/logo.png" alt="&amp;lt;center&amp;gt;&amp;lt;b&amp;gt;Logo - sentimentBR &amp;lt;/center&amp;gt;&amp;lt;/b&amp;gt;" width="20%" /&gt;
+&lt;p class="caption"&gt;&lt;center&gt;&lt;b&gt;Logo - sentimentBR &lt;/center&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;br/&gt;
+
+Link: [https://jodavid.github.io/sentimentBR/](https://jodavid.github.io/sentimentBR/)
+
+Este é um pacote inicial com o intuito de juntar as funções e dicionários cada vez mais em português para que seja possível realizar uma **Análise de Sentimento** cada vez mais eficiente e com boa confiabilidade.
+
+---
+
+# Instalando o `sentimentBR`
 
 
 ```r
-# library(devtools)
-# install_github("abhy/Rstem")
-# install_github("abhy/sentiment")
-# install.packages("lexiconPT")
-library(sentiment)
+# Instalação utilizando o pacote devtools
+install.packages("devtools")
+
+# Instalação do pacote de dependência
+install.packages("Rstem", repos = "http://www.omegahat.net/R")
+
+# Instação do pacote sentimentBR
+devtools::install_github("jodavid/sentimentBR")
+```
+
+Lendo o pacote
+
+
+```r
+# Lendo o pacote
+library(sentimentBR)
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+A Classificação será feita no DataFrame das frases,
+vamos retornar a matriz:
+
+A matriz de dados está nomeada como `texto` no slide 17.
+
+
+```r
+# -------
+# Pacotes Necessários
+library(sentimentBR)
 library(lexiconPT)
+# -------
 
-# Utilizando o pacote "sentiment" para classificar as emocoes
-emotions &lt;- classify_emotion(texto, algorithm = 'bayes', prior = 1.0)
-head(emotions)
+# -------
+# Transformando o arquivo 'texto' que estava no tipo Corpus para Data.frame
+textodataframe &lt;- data.frame(text = sapply(texto, as.character), stringsAsFactors = FALSE)
+# -------
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+Usando a função classify_emotion para classificar as emoções. É possível obter seis níveis de emoções: **RAIVA, DESGOSTO, MEDO, ALEGRIA, TRISTEZA, SURPRESA, CONFIANÇA, POSITIVA, NEGATIVA, ANTECIPAÇÃO**.
+
+
+```r
+# -------
+# Classificando as emocoes de cada paragrafo
+emotions &lt;- classify_emotion(textColumns = textodataframe, algorithm = 'bayes', lang = "pt")
+emotions
 ```
 
 ```
-##      ANGER              DISGUST            FEAR               JOY                SADNESS           SURPRISE           BEST_FIT
-## [1,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "7.34083555412328" "1.7277074477352" "2.78695866252273" "joy"   
-## [2,] "13.2129533435987" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" "anger" 
-## [3,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" NA      
-## [4,] "7.34083555412328" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" "anger" 
-## [5,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "1.02547755260094" "1.7277074477352" "2.78695866252273" NA      
-## [6,] "1.46871776464786" "3.09234031207392" "2.06783599555953" "7.34083555412328" "1.7277074477352" "2.78695866252273" "joy"
+##       RAIVA              DESGOSTO           MEDO               ALEGRIA            TRISTEZA           SURPRESA           CONFIANÇA          POSITIVA           NEGATIVA           ANTECIPAÇÃO        BEST_FIT  
+##  [1,] "2.29534107053581" "2.61502587407376" "2.23117171201856" "16.6710820846312" "9.6244348067824"  "3.20281253897588" "9.6244348067824"  "9.6244348067824"  "1.51551065080706" "9.6244348067824"  "alegria" 
+##  [2,] "46.2699034880154" "16.633843739491"  "31.8042240910739" "30.7643766403287" "31.3420797281218" "22.4676793423954" "59.4335096900736" "87.0831171047051" "50.1690555866591" "50.0176990455856" "positiva"
+##  [3,] "2.29534107053581" "2.61502587407376" "9.6244348067824"  "9.6244348067824"  "2.3852198330026"  "3.20281253897588" "9.6244348067824"  "17.3703030365747" "17.7333589627577" "9.6244348067824"  "negativa"
+##  [4,] "24.2826222792756" "37.6620705376169" "46.5907502806016" "16.6710820846312" "9.6244348067824"  "22.4676793423954" "52.3179275638891" "71.5913806451205" "82.6047522105605" "16.3566455132496" "negativa"
+##  [5,] "9.6244348067824"  "2.61502587407376" "2.23117171201856" "2.57778752893365" "2.3852198330026"  "3.20281253897588" "2.50885268059795" "1.87856657699013" "9.6244348067824"  "2.8922241003152"  "raiva"   
+##  [6,] "31.6117160155222" "16.633843739491"  "24.4109609963101" "9.6244348067824"  "16.8636497805622" "16.0460570745889" "2.50885268059795" "9.6244348067824"  "25.8422831187331" "16.3566455132496" "raiva"   
+##  [7,] "9.6244348067824"  "2.61502587407376" "24.4109609963101" "9.6244348067824"  "9.6244348067824"  "16.0460570745889" "9.6244348067824"  "1.87856657699013" "42.0601314306838" "9.6244348067824"  "negativa"
+##  [8,] "24.2826222792756" "23.6432526721997" "17.0176979015462" "16.6710820846312" "24.102864754342"  "16.0460570745889" "30.9711811853358" "56.099644185536"  "25.8422831187331" "36.5532776326512" "positiva"
+##  [9,] "31.6117160155222" "16.633843739491"  "39.1974871858378" "16.6710820846312" "2.3852198330026"  "9.6244348067824"  "16.7400169329669" "25.1161712663669" "33.9512072747084" "36.5532776326512" "medo"    
+## [10,] "24.2826222792756" "16.633843739491"  "24.4109609963101" "23.7177293624799" "31.3420797281218" "9.6244348067824"  "23.8555990591513" "48.3537759557437" "58.2779797426344" "36.5532776326512" "negativa"
+## [11,] "38.9408097517688" "9.6244348067824"  "31.8042240910739" "16.6710820846312" "16.8636497805622" "9.6244348067824"  "45.2023454377047" "40.6079077259515" "66.3869038986098" "9.6244348067824"  "negativa"
+## [12,] "16.953528543029"  "2.61502587407376" "9.6244348067824"  "2.57778752893365" "2.3852198330026"  "16.0460570745889" "9.6244348067824"  "9.6244348067824"  "25.8422831187331" "9.6244348067824"  "negativa"
+## [13,] "24.2826222792756" "23.6432526721997" "17.0176979015462" "23.7177293624799" "16.8636497805622" "16.0460570745889" "23.8555990591513" "32.8620394961592" "25.8422831187331" "23.0888562197168" "positiva"
+## [14,] "2.29534107053581" "2.61502587407376" "2.23117171201856" "2.57778752893365" "2.3852198330026"  "9.6244348067824"  "2.50885268059795" "1.87856657699013" "9.6244348067824"  "2.8922241003152"  "surpresa"
+## [15,] "2.29534107053581" "2.61502587407376" "2.23117171201856" "2.57778752893365" "2.3852198330026"  "3.20281253897588" "2.50885268059795" "1.87856657699013" "1.51551065080706" "2.8922241003152"  "surpresa"
+## [16,] "2.29534107053581" "2.61502587407376" "9.6244348067824"  "9.6244348067824"  "2.3852198330026"  "9.6244348067824"  "2.50885268059795" "1.87856657699013" "9.6244348067824"  "2.8922241003152"  "medo"    
+## [17,] "2.29534107053581" "2.61502587407376" "2.23117171201856" "2.57778752893365" "2.3852198330026"  "3.20281253897588" "2.50885268059795" "1.87856657699013" "1.51551065080706" "2.8922241003152"  "surpresa"
+## [18,] "2.29534107053581" "2.61502587407376" "2.23117171201856" "2.57778752893365" "2.3852198330026"  "3.20281253897588" "2.50885268059795" "1.87856657699013" "1.51551065080706" "2.8922241003152"  "surpresa"
+## [19,] "2.29534107053581" "2.61502587407376" "2.23117171201856" "2.57778752893365" "2.3852198330026"  "3.20281253897588" "2.50885268059795" "1.87856657699013" "1.51551065080706" "2.8922241003152"  "surpresa"
 ```
 
 ---
@@ -553,38 +642,72 @@ head(emotions)
 ## Extra: Análise de Sentimentos
 
 
+
 ```r
-# Utilizando o pacote "sentiment" para classificar as polaridades
-polarities &lt;- classify_polarity(texto, algorithm = "bayes")
-head(polarities)
+# -------
+# Quantos Parágrafos
+nrow(emotions)
 ```
 
 ```
-##      POS                NEG                 POS/NEG             BEST_FIT  
-## [1,] "9.47547003995745" "0.445453222112551" "21.2715265477714"  "positive"
-## [2,] "16.5333679773693" "17.8123396772424"  "0.928197433742679" "negative"
-## [3,] "1.03127774142571" "0.445453222112551" "2.31512017476245"  "positive"
-## [4,] "16.5333679773693" "26.8423564950873"  "0.61594323808326"  "negative"
-## [5,] "16.5333679773693" "0.445453222112551" "37.1158342933523"  "positive"
-## [6,] "17.9196623384892" "9.47547003995745"  "1.89116342122587"  "neutral"
+## [1] 19
 ```
 
 ```r
+# -------
+# Tabela das classificações
+table(emotions[,11])
+```
+
+```
+## 
+##  alegria     medo negativa positiva    raiva surpresa 
+##        1        2        6        3        2        5
+```
+
+Calculando as Polaridades
+
+
+```r
+# -------
+# Classificando a polaridade de cada paragrafi
+polarities &lt;- classify_polarity(textColumns = textodataframe, algorithm = "bayes")
+head(polarities,1)
+```
+
+```
+##      POS                NEG                 POS/NEG            BEST_FIT  
+## [1,] "1.03127774142571" "0.445453222112551" "2.31512017476245" "positive"
+```
+
+---
+
+## Extra: Análise de Sentimentos
+
+Neste caso também a classificação é obtida na última coluna denominada de `BEST_FIT`.
+
+
+```r
+# -------
 # Transformando os resultados em data.frame
-df &lt;- data.frame(paragrafos = texto, emocoes = emotions[,'BEST_FIT'],
+df &lt;- data.frame(paragrafos = textodataframe,
+                 emocoes = emotions[,'BEST_FIT'],
                  polaridades = polarities[,'BEST_FIT'])
-# Transformando os NA em N.A.
-df[is.na(df)] &lt;- "N.A"
+# Transformando os 'NA' em 'N.A.'
+df[is.na(df)] &lt;- "N.A."
+# -------
 ```
 
 ---
 
-## Extra: Análise de Sentimentos
+### Criando um gráfico de Barras com as polaridades
 
 
 ```r
-# &lt;&gt;----------------------------
-# Gráfico de Barras com polaridades
+# -------
+# Pacote Necessário
+library(ggplot2)
+# -------
 ggplot(df, aes(polaridades,fill=polaridades)) +
   geom_bar() +
   labs(title="", x ="Polaridades",
@@ -592,89 +715,78 @@ ggplot(df, aes(polaridades,fill=polaridades)) +
   theme_minimal()
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
-
-```r
-# &lt;&gt;----------------------------
-```
+&lt;img src="index_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Extra: Análise de Sentimentos
+
+### Criando um gráfico de Barras e Setores com 'emocoes'
 
 
 ```r
-# &lt;&gt;----------------------------
-# Gráfico de Setores com emocoes
-emotions &lt;- data.frame(emotions)
-ggplot(emotions, aes(x=factor(1), fill=factor(BEST_FIT))) +
-  geom_bar(width = 1) +
-  coord_polar(theta = "y") +
-  labs(title="", x ="x",
-       y = "y")
+# -------
+ggplot(df, aes(emocoes,fill=emocoes)) +
+  geom_bar() +
+  labs(title="", x ="Emoções",
+       y = "Quantidades") + 
+  theme_minimal()
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
-
-```r
-# &lt;&gt;----------------------------
-```
+&lt;img src="index_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Extra: Análise de Sentimentos
+## Gráfico de Nuvem de tags com polaridades
 
 
 ```r
+# -------
+# Pacote Necessário
 library(dplyr)
-# Gráfico de Nuvem de tags com polaridades
-#
+# -------
 # Dividindo o texto nas polaridades
 polaridades_cat &lt;- unique(df$polaridades)
-# Separando os textos de postivo
-positivo &lt;- summarise(df,
-                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[1])],
-                                     collapse = " "))
-# Separando os textos de Negativo
-negativo &lt;- summarise(df,
-                      texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[2])],
-                                     collapse = " "))
-# Separando os textos de Neutro
-neutro &lt;- summarise(df,
-                    texto2 = paste(df$paragrafos[which(df$polaridades==polaridades_cat[3])],
-                                   collapse = " "))
-# Juntando em um data.frame
-df2 &lt;- data.frame(polaridades = polaridades_cat,
-                  pasted = c(positivo$texto2,negativo$texto2,neutro$texto2))
-df2$pasted &lt;- removeWords(df2$pasted, stopwords(kind = "pt"))
-corpus = Corpus(VectorSource(df2$pasted))
+# -------
+df2 &lt;- t( sapply(1:length(polaridades_cat),function(i){
+        polaridade &lt;- summarise(df,
+                                texto2 = paste(df$text[which(df$polaridades==polaridades_cat[i])],
+                                               collapse = " "));
+  
+  return(c(polaridades = polaridades_cat[i],
+         pasted = c(polaridade$texto2)))
+}) )
+# -------
+corpus &lt;- Corpus(VectorSource(df2[,2]))
+corpus &lt;- tm_map(corpus, removeNumbers)
 tdm &lt;- TermDocumentMatrix(corpus)
 tdm &lt;- as.matrix(tdm)
-colnames(tdm) &lt;- unique(df2$polaridades)
-# &lt;&gt;----------------------------
+colnames(tdm) &lt;- unique(df2[,1])
+# -------
 ```
 
 ---
 
-## Extra: Análise de Sentimentos
+## Gráfico de Nuvem de tags com polaridades
 
 
 ```r
+# -------
+# Gerando Gráfico
 comparison.cloud(tdm,
                  colors = yarrr::piratepal("basel"),
                  scale = c(3,.5),random.order = F)
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="index_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
+
 
 # Script R 
 
 Segue abaixo o link para o Script **R** ulitizado:
 
-[Script R - Clique Aqui!](https://jodavid.github.io/Slide-Introdu-o-a-Web-Scrapping-com-rvest/Script%20-%20Introducao-.R)
+[Script R - Clique Aqui!](#)
 
 
 # Fontes

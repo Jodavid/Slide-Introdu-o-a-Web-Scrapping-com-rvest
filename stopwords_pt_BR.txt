@@ -557,4 +557,13 @@ zero
 8
 9
 0
+obs
+mim
+bio
+deu
+nao
+jan
+dao
+las
+qto
 _
